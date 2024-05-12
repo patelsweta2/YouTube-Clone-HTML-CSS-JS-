@@ -1,0 +1,199 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  /* background-color: rgb(30, 29, 29); */
+  /* background-color: white; */
+}
+:root {
+  background-color: black;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: #5a5a5a;
+}
+img,
+i {
+  cursor: pointer;
+}
+
+h1 {
+  font-size: 50px;
+  line-height: 64px;
+  color: white;
+}
+h2 {
+  font-size: 46px;
+  line-height: 54px;
+  color: white;
+}
+
+h3 {
+  /* font-size: 30px; */
+  color: rgb(206, 201, 201);
+}
+
+h6 {
+  font-size: 12px;
+  color: rgb(206, 201, 201);
+}
+
+p {
+  font-size: 16px;
+  color: rgb(206, 201, 201);
+  margin: 15px 0 20px 0;
+}
+/** nav **/
+nav {
+  height: 56px;
+  padding: 10px 2%;
+  justify-content: space-between;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #212121;
+}
+
+.flex-div {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.nav-icon {
+  margin-right: 25px;
+  height: 24px;
+  width: 24px;
+}
+.logo {
+  width: 150px;
+  padding: 8px;
+}
+.search-box {
+  border: 1px solid #e5d0d0;
+  margin-right: 15px;
+  padding: 8px 12px;
+  border-radius: 25px;
+}
+.search-box:hover {
+  border: 1px solid blue;
+}
+
+.search-input {
+  width: 500px;
+  border: none;
+  font-size: 1rem;
+  outline: 0;
+  background: transparent;
+}
+
+.search-icon {
+  width: 40px;
+  text-align: center;
+}
+.voice-search {
+  width: 35px;
+  height: 35px;
+  margin: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #5a5a5a;
+}
+
+.nav-right img {
+  width: 40px;
+  height: 35px;
+  margin-right: 25px;
+}
+.nav-right .user-icon {
+  width: 35px;
+  border-radius: 50%;
+}
+
+/************  side bar ****************/
+.content {
+  display: grid;
+  grid-template-columns: 20vw 1fr;
+  gap: 10px;
+  padding: 5px;
+}
+hr {
+  border-color: rgb(152, 152, 152, 0.5);
+}
+.left {
+  position: sticky;
+  border-radius: 10px 10px 0 0;
+  background-color: #212121;
+  top: 12vh;
+  max-width: 20vw;
+  height: 90vh;
+  padding: 10px;
+  overflow: auto;
+}
+/* Style for both left container scrollbar and page scrollbar */
+::-webkit-scrollbar {
+  width: 10px; /* Width of the scrollbar */
+}
+/* Style for the track of both scrollbars */
+::-webkit-scrollbar-track {
+  background-color: transparent; /* Make the scrollbar track transparent */
+}
+/* Style for the thumb of both scrollbars */
+::-webkit-scrollbar-thumb {
+  background-color: #383838;
+  border-radius: 5px;
+  min-height: 50px;
+}
+
+/* Style for the button of the page scrollbar */
+::-webkit-scrollbar-button {
+  background-color: white;
+}
+.left::-webkit-scrollbar-button {
+  background-color: transparent;
+}
+.home,
+.you,
+.subscriptions,
+.explore,
+.more,
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.home > div,
+.you > div,
+.subscriptions > div,
+.explore > div,
+.more > div,
+.settings > div {
+  padding: 10px;
+  border-radius: 5px;
+  margin-left: 5px;
+}
+
+.home > div:hover,
+.you > div:hover,
+.subscriptions > div:hover,
+.explore > div:hover,
+.more > div:hover,
+.settings > div:hover {
+  background-color: #474545;
+}
+.left-footer {
+  color: 9ea2a6;
+  padding: 5px;
+  font-size: 14px;
+  line-height: 30px;
+}
