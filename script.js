@@ -1,4 +1,5 @@
-const API_KEY = "AIzaSyBNvXqypkijI2-LbTZSM4QxXkEYE8njJ00";
+// const API_KEY = "AIzaSyBNvXqypkijI2-LbTZSM4QxXkEYE8njJ00";
+const API_KEY = "AIzaSyAHByvpyunb-S_hjrXgDuQ_-eqUvdMs5Js";
 const baseUrl = "https://www.googleapis.com/youtube/v3";
 
 async function fetchVideo(searchQuery, maxResult) {
@@ -15,10 +16,10 @@ async function fetchVideo(searchQuery, maxResult) {
     console.log(data);
     renderVideos(data);
   } catch (error) {
-    console.error(error);
+    console.error("Error ", error);
   }
 }
-fetchVideo("", 50);
+fetchVideo("", 30);
 // fetchVideo("latest videos", 50);
 // fetchVideo("latest videos", 50);
 
@@ -31,7 +32,7 @@ async function fetchLogo(channelId) {
     const logo = data.items[0].snippet.thumbnails.default.url;
     return logo;
   } catch (error) {
-    console.error("Error fetching channel dp:", error);
+    // console.error("Error fetching channel dp:", error);
     return null;
   }
 }
@@ -233,16 +234,19 @@ function formatDuration(duration) {
 }
 
 let searchInput = document.querySelector(".search-input");
-searchInput.addEventListener("change", (e) => {
-  e.preventDefault();
-  let value = searchInput.value;
-  console.log("search clicked", value);
-  fetchVideo(value, 50);
+searchInput.addEventListener("keyup", async (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    let value = searchInput.value;
+    console.log("search clicked", value);
+    await fetchVideo(value, 30);
+  }
 });
+
 function addEventListener(video, videoId) {
   video.addEventListener("click", (e) => {
-    console.log(e.target);
-    console.log(videoId);
+    // console.log(e.target);
+    // console.log(videoId);
     window.location.href = `videoPlayer.html?videoId=${videoId}`;
   });
 }

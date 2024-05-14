@@ -37,7 +37,46 @@
           <img src="assets/name.jpg" alt="user" class="user-icon" />
         </div>
       </nav>
+      <div class="container">
+        <div class="left">
+          <div id="video-player">Video Player div</div>
+          <div class="stats">
+            <div class="title">Video title</div>
+            <div class="btns">
+              <div class="channel">
+                <div class="profile">Logo</div>
+                <div class="channelName">
+                  <div class="name">channelName</div>
+                  <div class="subs">5K Subscriber</div>
+                </div>
+              </div>
+              <div class="join">Join btn</div>
+              <div class="sub">Subscribe btn</div>
+              <div class="likedislike">
+                <div class="like">1K like</div>
+                <div class="dislike">dislike</div>
+              </div>
+              <div class="share">Share</div>
+              <div class="download">Download</div>
+            </div>
+            <div class="description">description</div>
+            <div class="commetCount">804 Comments</div>
+          </div>
+          <hr
+            style="
+              border-color: #383838;
+              border-style: solid;
+              border-width: 2px 0;
+            "
+          />
+          <div class="comments"></div>
+        </div>
+        <div class="right">
+          <div class="videos"></div>
+        </div>
+      </div>
     </div>
-    <script src="player.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script type="module" src="player.js"></script>
   </body>
 </html>
