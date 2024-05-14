@@ -142,11 +142,11 @@ hr {
 ::-webkit-scrollbar {
   width: 10px; /* Width of the scrollbar */
 }
-/* Style for the track of both scrollbars */
+/* Style for the track of both scrollbar */
 ::-webkit-scrollbar-track {
   background-color: transparent; /* Make the scrollbar track transparent */
 }
-/* Style for the thumb of both scrollbars */
+/* Style for the thumb of both scrollbar */
 ::-webkit-scrollbar-thumb {
   background-color: #383838;
   border-radius: 5px;
@@ -196,4 +196,71 @@ hr {
   padding: 5px;
   font-size: 14px;
   line-height: 30px;
+}
+
+/*** video ***/
+.details {
+  display: flex;
+  /* justify-content: space-between; */
+}
+.videoDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.videos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 50vh;
+  gap: 20px;
+}
+.thumbnail {
+  position: relative;
+}
+.thumbnailImg {
+  border-radius: 10px;
+  width: 100%;
+  height: 225px;
+  object-fit: cover;
+}
+.duration {
+  position: absolute;
+  right: 5px;
+  bottom: 7px;
+  width: fit-content;
+  height: fit-content;
+  padding: 2px 4px;
+  color: white;
+  background-color: black;
+}
+p {
+  padding: 5px;
+}
+.titleText {
+  font-weight: 500;
+}
+.channelName {
+  color: rgb(152, 152, 152);
+}
+.time {
+  color: rgb(152, 152, 152);
+}
+.video {
+  border-radius: 15px;
+}
+.video:hover {
+  background-color: #272727;
+}
+.title {
+  display: flex;
+  align-items: center;
+}
+
+.profile > img {
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+}
+.titleText {
+  padding: 5px;
 }
