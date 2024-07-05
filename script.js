@@ -1,252 +1,172 @@
-// const API_KEY = "AIzaSyBNvXqypkijI2-LbTZSM4QxXkEYE8njJ00";
-const API_KEY = "AIzaSyAHByvpyunb-S_hjrXgDuQ_-eqUvdMs5Js";
-const baseUrl = "https://www.googleapis.com/youtube/v3";
+const API_KEY = "AIzaSyBNvXqypkijI2-LbTZSM4QxXkEYE8njJ00";
+const BASE_URL = "https://www.googleapis.com/youtube/v3";
+const videoContainerDiv = document.getElementById("videoContainerDiv");
+const searchInput = document.getElementById("searchInput");
+const searchButton = document.getElementById("searchButton");
+const menuIcon = document.getElementById("menuIcon");
+const leftMenu = document.getElementById("leftMenu");
 
-async function fetchVideo(searchQuery, maxResult) {
-  try {
-    const url =
-      baseUrl +
-      "/search" +
-      `?key=${API_KEY}` +
-      `&part=snippet` +
-      `&q=${searchQuery}` +
-      `&maxResults=${maxResult}`;
-    const response = await fetch(url);
-    const data = await response.json();
-    console.log(data);
-    renderVideos(data);
-  } catch (error) {
-    console.error("Error ", error);
-  }
-}
-fetchVideo("", 30);
-// fetchVideo("latest videos", 50);
-// fetchVideo("latest videos", 50);
+let thumbnailImg = null;
 
-async function fetchLogo(channelId) {
-  const url = `${baseUrl}/channels?part=snippet&id=${channelId}&key=${API_KEY}`;
-
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    const logo = data.items[0].snippet.thumbnails.default.url;
-    return logo;
-  } catch (error) {
-    // console.error("Error fetching channel dp:", error);
-    return null;
-  }
-}
-const videosDiv = document.querySelector(".videos");
-
-const today = new Date();
-function getDate(videoDate) {
-  videoDate = new Date(videoDate.split("T")[0]); // YYYY-MM-DD
-  const differenceInMilliseconds = today.getTime() - videoDate.getTime();
-  const days = differenceInMilliseconds / (1000 * 60 * 60 * 24);
-  const months = days / 30;
-  const hours = days / 24;
-  const minute = hours / 60;
-  const years = days / 365;
-  if (years >= 1) {
-    let year = Math.floor(years);
-    return year == 1 ? year + " year ago" : year + " years ago";
-  }
-  if (months >= 1) {
-    let month = Math.floor(months);
-    return month == 1 ? month + " month ago" : month + " months ago";
-  }
-  if (days >= 1) {
-    let day = Math.floor(days);
-    return day == 1 ? day + " day ago" : day + " days ago";
-  }
-  let min = Math.ceil(minute);
-  return min == 1 ? min + " minute ago" : year + " minutes ago";
-}
-function renderVideos(data) {
-  videosDiv.innerHTML = "";
-  const { items } = data; //array of video object
-  console.log(items);
-  items.forEach(async (item) => {
-    const { videoId } = item.id; //undefined for youtube channel
-    console.log(videoId);
-    const { snippet } = item;
-    const {
-      title,
-      channelTitle,
-      channelId,
-      description,
-      liveBroadcastContent,
-      publishTime,
-      thumbnails,
-    } = snippet;
-    let imageUrl = thumbnails.high.url;
-    let profilePic = await fetchLogo(channelId);
-    let date = getDate(publishTime);
-    let contentDetails, statistics, time, view;
-    if (videoId) {
-      contentDetails = await fetchVideoStats(videoId, "contentDetails");
-      statistics = await fetchVideoStats(videoId, "statistics");
-      // console.log('contentDetails',contentDetails);
-      contentDetails = contentDetails.items[0].contentDetails; //"cS28Dv2XfXo"
-      statistics = statistics.items[0].statistics;
-      let { duration } = contentDetails;
-      let { viewCount } = statistics;
-      view = formatViews(viewCount);
-      time = formatDuration(duration);
-    }
-    let videoDiv = document.createElement("div");
-    videoDiv.innerHTML = `
-                  <div class="thumbnail">
-                      <img src="${imageUrl}" alt="loading..." class="thumbnailImg">
-                      <div class="${videoId ? "duration" : ""}"> ${
-      videoId ? time : ""
-    }</div>
-                  </div>
-                  <div class="details">
-                      <div style="padding:5px;">
-                          <div class="profile"><img src="${profilePic}" alt="${
-      channelTitle[0]
-    }" class="thumbnailImg"></div>
-                          </div>
-                          <div class="videoDetails">
-                          <p class="titleText">${title}</p>
-                          <p class="channelName">${channelTitle}</p>
-                          <p class="${videoId ? "time" : ""}">${
-      videoId ? view + " views  &#x2022; " + date : ""
-    }</p>
-                      </div>
-                  </div>
-          `;
-    videoDiv.classList.add("video");
-    videosDiv.append(videoDiv);
-    addEventListener(videoDiv, videoId);
-  });
-}
-// renderVideos(data);
-async function fetchVideoStats(videoId, typeOfDetails) {
-  try {
-    const response = await fetch(
-      baseUrl +
-        `/videos` +
-        `?key=${API_KEY}` +
-        `&part=${typeOfDetails}` +
-        `&id=${videoId}`
-    );
-    const data = await response.json();
-    console.log(data);
-    if (typeOfDetails === "contentDetails")
-      console.log(
-        typeOfDetails + " inside stats func" + data.items,
-        data.items[0].contentDetails
-      );
-    else
-      console.log(
-        typeOfDetails + " inside stats func" + data.items,
-        data.items[0].statistics
-      );
-    return data;
-  } catch (error) {
-    console.log(videoId);
-    console.error(error);
-  }
-}
-// fetchVideoStats("cS28Dv2XfXo", "contentDetails");
-// fetchVideoStats("o7X82vwBAbw", "statistics");
-const videoId = "eILUmCJhl64";
-
-// fetchComments(videoId);
-
-function formatViews(viewCount) {
-  let count = "";
-  if (viewCount >= 1000000000) {
-    count = (viewCount / 1000000000).toFixed(1);
-    if (count.endsWith(".0")) count = count.slice(0, -2);
-    return count + "B";
-  } else if (viewCount >= 1000000) {
-    count = (viewCount / 1000000).toFixed(1);
-    //  if(count.endsWith('.00'))count = count.slice(0, -3);
-    if (count.endsWith(".0")) count = count.slice(0, -2);
-    return count + "M";
-  } else if (viewCount >= 10000) {
-    count = Math.floor(viewCount / 1000);
-    return count + "K";
-  } else if (viewCount >= 1000) {
-    count = (viewCount / 1000).toFixed(1);
-    if (count.endsWith(".0")) count = count.slice(0, -2);
-    return count + "K";
-  } else {
-    return viewCount;
-  }
-}
-function formatDuration(duration) {
-  //PT1M19S
-  let hour = "";
-  let min = "";
-  let sec = "";
-  if (duration.includes("D")) {
-    return "24:00:00";
-  }
-  let hourIdx = duration.indexOf("H");
-  let minIdx = duration.indexOf("M");
-  let secIdx = duration.indexOf("S");
-  if (hourIdx === -1 && minIdx === -1) {
-    // in seconds PT58S
-    sec = duration.slice(2, -1);
-    if (sec.length == 1) sec = "0" + sec;
-    return "0:" + sec;
-  } else if (hourIdx === -1) {
-    //in minutes PT2M3S
-    min = duration.slice(2, minIdx);
-    if (secIdx == -1) {
-      //PT3M
-      sec = "00";
-    } else {
-      sec = duration.slice(minIdx + 1, -1);
-      if (sec.length == 1) sec = "0" + sec;
-    }
-    return min + ":" + sec;
-  } else {
-    //in hours 10:03:45 PT10H3M45S
-    hour = duration.slice(2, hourIdx);
-    if (minIdx === -1 && secIdx === -1) {
-      //PT1H
-      return hour + ":00" + ":00";
-    }
-    if (secIdx == -1) {
-      //PT1H30M
-      min = duration.slice(hourIdx + 1, minIdx);
-      if (min.length == 1) min = "0" + min;
-      return hour + ":" + min;
-    }
-    if (minIdx == -1) {
-      //PT1H3S
-      sec = duration.slice(hourIdx + 1, -1);
-      if (sec.length == 1) sec = "0" + sec;
-      return hour + ":" + "00" + ":" + sec;
-    } else {
-      min = duration.slice(hourIdx + 1, minIdx);
-      if (min.length == 1) min = "0" + min;
-      sec = duration.slice(minIdx + 1, -1);
-      if (sec.length == 1) sec = "0" + sec;
-      return hour + ":" + min + ":" + sec;
-    }
-  }
-}
-
-let searchInput = document.querySelector(".search-input");
-searchInput.addEventListener("keyup", async (e) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    let value = searchInput.value;
-    console.log("search clicked", value);
-    await fetchVideo(value, 30);
-  }
+menuIcon.addEventListener("click", () => {
+  leftMenu.classList.toggle("smallLeftMenu");
+  black.classList.toggle("show");
+});
+black.addEventListener("click", (e) => {
+  e.stopPropagation();
+  leftMenu.classList.remove("smallLeftMenu");
+  black.classList.remove("show");
 });
 
-function addEventListener(video, videoId) {
-  video.addEventListener("click", (e) => {
-    // console.log(e.target);
-    // console.log(videoId);
-    window.location.href = `videoPlayer.html?videoId=${videoId}`;
+async function fetchVideos(searchTerm, maxResult) {
+  const response = await fetch(
+    `${BASE_URL}/search?key=${API_KEY}&q=${searchTerm}&maxResults=${maxResult}&part=id&type=video`
+  );
+  const data = await response.json();
+  console.log(data);
+  const videoIds = data.items.map((el) => el.id.videoId);
+  videoIds.map((videoId) => {
+    fetchVideoDetails(videoId);
   });
+}
+
+async function fetchVideoDetails(videoId) {
+  const response = await fetch(
+    `https://www.googleapis.com/youtube/v3/videos?key=${API_KEY}&part=snippet,statistics&id=${videoId}`
+  );
+  const data = await response.json();
+  const videoDetails = data.items[0];
+
+  const channelResponse = await fetch(
+    `${BASE_URL}/channels?key=${API_KEY}&part=snippet&id=${videoDetails.snippet.channelId}`
+  );
+  const channelData = await channelResponse.json();
+  const channelInfo = channelData.items[0].snippet;
+  // console.log("info",channelInfo)
+
+  const videoDiv = document.createElement("div");
+  videoDiv.id = videoId;
+  videoDiv.addEventListener("click", (e) => goToDetailsPage(videoId));
+  videoDiv.addEventListener("mouseover", (e) =>
+    playVideoPreview(videoId, videoDetails.snippet.thumbnails.high.url)
+  );
+  videoDiv.addEventListener("mouseout", (e) =>
+    stopVideoAndDisplayThumbnail(videoId)
+  );
+  videoDiv.className = "video-card";
+  videoDiv.innerHTML = `
+        <div class="video-card-img" id="thumbDiv-${videoId}">
+            <img id="thumbImg-${videoId}" src="${
+    videoDetails.snippet.thumbnails.high.url
+  }" alt="">
+         </div>
+        <div class="video-card-details">
+        <img class="channel-logo"
+            src="${channelInfo.thumbnails.default.url}"
+            alt="">
+        <div class="details">
+            <h3 id="title">${
+              videoDetails.snippet.title.slice(0, 64) + "..."
+            }</h3>
+            <p>${videoDetails.snippet.channelTitle}</p>
+            <p><span>${formatViewCount(
+              videoDetails.statistics.viewCount
+            )}</span> views <span>${calculateTimeGap(
+    videoDetails.snippet.publishedAt
+  )}</span></p>
+        </div>
+    `;
+  videoContainerDiv.appendChild(videoDiv);
+  // console.log(videoDetails)
+}
+
+fetchVideos("", 20);
+
+searchButton.addEventListener("click", () => {
+  console.log("first");
+  videoContainerDiv.innerHTML = "";
+  fetchVideos(searchInput.value, 20);
+});
+function formatViewCount(viewCount) {
+  const count = parseFloat(viewCount);
+
+  if (count >= 1e9) {
+    return (count / 1e9).toFixed(1) + "B";
+  } else if (count >= 1e6) {
+    return (count / 1e6).toFixed(1) + "M";
+  } else if (count >= 1e3) {
+    return (count / 1e3).toFixed(1) + "K";
+  } else {
+    return count.toString();
+  }
+}
+function calculateTimeGap(publishedAt) {
+  // Parse the "publishedAt" timestamp into a Date object
+  const publishedDate = new Date(publishedAt);
+
+  // Get the current time as a Date object
+  const currentDate = new Date();
+
+  // Calculate the time difference in milliseconds
+  const timeDifference = currentDate - publishedDate;
+
+  // Convert the time difference to seconds
+  const seconds = Math.floor(timeDifference / 1000);
+
+  if (seconds < 60) {
+    return `${seconds} seconds ago`;
+  } else if (seconds < 3600) {
+    const minutes = Math.floor(seconds / 60);
+    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+  } else if (seconds < 86400) {
+    const hours = Math.floor(seconds / 3600);
+    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  } else if (seconds < 604800) {
+    const days = Math.floor(seconds / 86400);
+    return `${days} day${days > 1 ? "s" : ""} ago`;
+  } else if (seconds < 2419200) {
+    const weeks = Math.floor(seconds / 604800);
+    return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
+  } else if (seconds < 29030400) {
+    const months = Math.floor(seconds / 2419200);
+    return `${months} month${months > 1 ? "s" : ""} ago`;
+  } else {
+    const years = Math.floor(seconds / 29030400);
+    return `${years} year${years > 1 ? "s" : ""} ago`;
+  }
+}
+
+function goToDetailsPage(videoId) {
+  localStorage.setItem("videoId", videoId);
+  window.location.href = "videoDetails.html";
+}
+
+function playVideoPreview(videoId, currrentThumbnail) {
+  thumbnailImg = currrentThumbnail;
+  if (YT) {
+    new YT.Player("thumbImg-" + videoId, {
+      height: "100%",
+      width: "100%",
+      videoId,
+      playerVars: {
+        autoplay: 1,
+        controls: 0,
+        modestbranding: 1,
+        showinfo: 0,
+        mute: 1,
+      },
+    });
+    document
+      .getElementById("thumbDiv-" + videoId)
+      .addEventListener("click", (e) => {
+        e.preventDefault();
+        goToDetailsPage();
+      });
+  }
+}
+function stopVideoAndDisplayThumbnail(videoId) {
+  const thumbnailDiv = document.getElementById("thumbDiv-" + videoId);
+  thumbnailDiv.innerHTML = `
+    <img id="${"thumbImg-" + videoId}" src="${thumbnailImg}" alt="">
+    `;
 }
