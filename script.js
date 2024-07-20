@@ -5,6 +5,23 @@ const searchInput = document.getElementById("searchInput");
 const searchButton = document.getElementById("searchButton");
 const menuIcon = document.getElementById("menuIcon");
 const leftMenu = document.getElementById("leftMenu");
+let themeToggle = document.getElementById("toggleTheme");
+
+// const suggestionsBox = document.getElementById("suggestions");
+
+themeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark-theme");
+  if (document.body.classList.contains("dark-theme")) {
+    localStorage.setItem("theme", "dark");
+  } else {
+    localStorage.setItem("theme", "light");
+  }
+});
+
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+  document.classList.add("dark-theme");
+}
 
 let thumbnailImg = null;
 
@@ -23,7 +40,7 @@ async function fetchVideos(searchTerm, maxResult) {
     `${BASE_URL}/search?key=${API_KEY}&q=${searchTerm}&maxResults=${maxResult}&part=id&type=video`
   );
   const data = await response.json();
-  console.log(data);
+  // console.log(data);
   const videoIds = data.items.map((el) => el.id.videoId);
   videoIds.map((videoId) => {
     fetchVideoDetails(videoId);
@@ -83,10 +100,64 @@ async function fetchVideoDetails(videoId) {
 fetchVideos("", 20);
 
 searchButton.addEventListener("click", () => {
-  console.log("first");
+  // console.log("first");
   videoContainerDiv.innerHTML = "";
   fetchVideos(searchInput.value, 20);
 });
+
+searchInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    videoContainerDiv.innerHTML = "";
+    fetchVideos(searchInput.value, 20);
+  }
+});
+
+// searchInput.addEventListener("input", debounce(handleInput, 300));
+
+// async function handleInput() {
+//   const searchTerm = searchInput.value;
+
+//   if (searchTerm) {
+//     const response = await fetch(
+//       `${BASE_URL}/search?key=${API_KEY}&q=${searchTerm}&maxResults=5&part=snippet&type=video`
+//     );
+//     const data = await response.json();
+//     console.log("dataf", data);
+//     displaySuggestions(data.items);
+//   } else {
+//     suggestionsBox.innerHTML = "";
+//     suggestionsBox.style.display = "none";
+//   }
+// }
+
+// function displaySuggestions(items) {
+//   suggestionsBox.innerHTML = items
+//     .map((item) => `<div class="suggestion-item">${item.snippet.title}</div>`)
+//     .join("");
+//   suggestionsBox.style.display = "block";
+//   console.log("suggestions", suggestionsBox.innerHTML);
+
+//   const suggestionItems = document.querySelectorAll(".suggestion-item");
+//   suggestionItems.forEach((item, index) => {
+//     item.addEventListener("click", () => {
+//       searchInput.value = items[index].snippet.title;
+//       suggestionsBox.innerHTML = "";
+//       suggestionsBox.style.display = "none";
+//       fetchVideos(searchInput.value, 20);
+//     });
+//   });
+// }
+
+// function debounce(func, delay) {
+//   let timeoutId;
+//   return function (...args) {
+//     clearTimeout(timeoutId);
+//     timeoutId = setTimeout(() => {
+//       func(...args);
+//     }, delay);
+//   };
+// }
+
 function formatViewCount(viewCount) {
   const count = parseFloat(viewCount);
 

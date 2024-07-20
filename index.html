@@ -19,12 +19,14 @@
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/YouTube_dark_logo_2017.svg/1280px-YouTube_dark_logo_2017.svg.png"
             alt="">
         <div class="inputDiv">
-            <input id="searchInput" type="text" placeholder="Search">
-            <button class="searchBtn" id="searchButton"><span class="material-icons">
+            <input id="searchInput" type="search" placeholder="Search">
+            <button class="searchBtn" id="searchButton"><span class="material-icons" style="color:rgb(194, 131, 131)">
                     search
                 </span></button>
+                <div id="suggestions" class="suggestions"></div>
         </div>
-        <span class="material-icons">
+        <span id="toggleTheme" class="material-icons" style="cursor: pointer;">brightness_6</span>
+        <span class="material-icons" >
             notifications
         </span>
     </nav>
